@@ -1,13 +1,13 @@
-from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement, ns
 
+IMAGE_SCALING = 0.8
 
 def emu_to_twips(emu):
     return int(emu * 1440 / 914400)
 
-def add_photo_grid_page(doc, photo_paths, photo_labels1, photo_labels2):
+def add_photo_grid_page(doc, photo_paths, photo_labels):
     section = doc.sections[-1]
     section.top_margin = Inches(0.25)
     section.bottom_margin = Inches(0.5)
@@ -30,7 +30,7 @@ def add_photo_grid_page(doc, photo_paths, photo_labels1, photo_labels2):
     cell_height = usable_height / 4
 
     # Square photo size driven by height
-    image_size = min(cell_width, cell_height) * 0.7
+    image_size = min(cell_width, cell_height) * IMAGE_SCALING
 
     table = doc.add_table(rows=4, cols=3)
     table.autofit = False
@@ -63,24 +63,19 @@ def add_photo_grid_page(doc, photo_paths, photo_labels1, photo_labels2):
                     width=image_size
                 )
 
-                # --- Lastname ---
+                # --- Name labels ---
                 p_label = cell.add_paragraph()
                 p_label.alignment = WD_ALIGN_PARAGRAPH.LEFT
                 p_label.paragraph_format.space_before = 0
                 p_label.paragraph_format.space_after = 0
 
-                label_run = p_label.add_run(photo_labels1[photo_index])
-                label_run.font.size = Pt(14)
-                label_run.font.italic = True
+                label = photo_labels[photo_index].split(", ", maxsplit=1)
+                lastname_run = p_label.add_run(label[0])
+                lastname_run.font.size = Pt(14)
+                lastname_run.font.bold = True
+                lastname_run.font.underline = True
 
-                # --- Firstnames ---
-                p_label = cell.add_paragraph()
-                p_label.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                p_label.paragraph_format.space_before = 0
-                p_label.paragraph_format.space_after = 0
-
-                label_run = p_label.add_run(photo_labels2[photo_index])
-                label_run.font.size = Pt(12)
-                label_run.font.italic = True
+                rest_run = p_label.add_run(", "+label[1])
+                rest_run.font.size = Pt(14)
 
                 photo_index += 1
