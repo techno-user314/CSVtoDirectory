@@ -1,5 +1,3 @@
-import os
-
 import pandas as pd
 
 from data_parsing import read_data
