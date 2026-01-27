@@ -7,9 +7,11 @@ class Person:
         self.lastname = last_name
         self.firstname = first_name
         self.formalname = first_name
+
         self.is_primary = is_primary
         self.is_spouse = is_spouse
         self.family_id = None
+        self.family = []
 
         self.mobile_number = ""
         self.email = ""
@@ -31,8 +33,9 @@ class Person:
         self.state = state
         self.zip_code = zip_code
 
-    def set_family(self, fid_num):
+    def set_family(self, fid_num, family_member_names):
         self.family_id = fid_num
+        self.family = family_member_names
 
     def __str__(self):
         return (f"{self.firstname} {self.lastname}")
@@ -63,12 +66,15 @@ def read_data(csv_path):
 
         # Update family info
         if not pd.isnull(row["Family ID"]):
-            new_person.set_family(row["Family ID"])
+            if not pd.isnull(row["Family Members"]):
+                new_person.set_family(row["Family ID"], row["Family Members"].split(", "))
+            else:
+                new_person.set_family(row["Family ID"], [])
             if row["Family ID"] not in families.keys():
                 families.update({row["Family ID"]:lastname})
         else:
             no_family += 1
-            new_person.set_family(-no_family)
+            new_person.set_family(-no_family, [])
             new_person.is_primary = True
             families.update({-no_family: lastname})
 
