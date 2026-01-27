@@ -1,5 +1,7 @@
 import pandas as pd
 
+DONT_INCLUDE = []
+
 class Person:
     def __init__(self, first_name, last_name, is_primary=False, is_spouse=False):
         self.lastname = last_name
@@ -49,6 +51,7 @@ def read_data(csv_path):
         firstname = row["First Name"]
         lastname = row["Last Name"]
 
+        # Create info for the person
         fam_rel = row["Family Relationship"]
         new_person = Person(firstname, lastname,
                             is_primary=(fam_rel == "Primary" or fam_rel == "Husband"),
@@ -70,5 +73,13 @@ def read_data(csv_path):
             families.update({-no_family: lastname})
 
         people.append(new_person)
+
+    # Ignore people/families who have requested it
+    for person in people:
+        if person.formalname + " " + person.lastname in DONT_INCLUDE \
+                or person.firstname + " " + person.lastname in DONT_INCLUDE:
+            print(f"Excluding the family of {person} from directory")
+            families.pop(person.family_id)
+    people = [p for p in people if p.family_id in families.keys()]
 
     return people, families
