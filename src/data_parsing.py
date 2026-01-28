@@ -1,13 +1,24 @@
 import pandas as pd
+import json
+
+try:
+    with open("special_cases.json", "r", encoding="utf-8") as file:
+        special_cases = json.load(file)
+except FileNotFoundError:
+    print("File not found: special_cases.json")
+except json.JSONDecodeError as e:
+    print("Invalid JSON:", e)
 
 class Person:
     def __init__(self, first_name, last_name, is_primary=False, is_spouse=False):
         self.lastname = last_name
         self.firstname = first_name
         self.formalname = first_name
+
         self.is_primary = is_primary
         self.is_spouse = is_spouse
         self.family_id = None
+        self.family = []
 
         self.mobile_number = ""
         self.email = ""
@@ -29,8 +40,14 @@ class Person:
         self.state = state
         self.zip_code = zip_code
 
-    def set_family(self, fid_num):
+    def set_family(self, fid_num, family_member_names):
         self.family_id = fid_num
+        self.family = family_member_names
+
+    def is_named(self, fullname_str):
+        pref_name = self.firstname + " " + self.lastname
+        formal_name = self.formalname + " " + self.lastname
+        return (pref_name==fullname_str or formal_name==fullname_str)
 
     def __str__(self):
         return (f"{self.firstname} {self.lastname}")
@@ -49,6 +66,7 @@ def read_data(csv_path):
         firstname = row["First Name"]
         lastname = row["Last Name"]
 
+        # Create info for the person
         fam_rel = row["Family Relationship"]
         new_person = Person(firstname, lastname,
                             is_primary=(fam_rel == "Primary" or fam_rel == "Husband"),
@@ -60,15 +78,46 @@ def read_data(csv_path):
 
         # Update family info
         if not pd.isnull(row["Family ID"]):
-            new_person.set_family(row["Family ID"])
+            if not pd.isnull(row["Family Members"]):
+                new_person.set_family(row["Family ID"], row["Family Members"].split(", "))
+            else:
+                new_person.set_family(row["Family ID"], [firstname])
             if row["Family ID"] not in families.keys():
                 families.update({row["Family ID"]:lastname})
         else:
             no_family += 1
-            new_person.set_family(-no_family)
+            new_person.set_family(-no_family, [firstname])
             new_person.is_primary = True
             families.update({-no_family: lastname})
 
         people.append(new_person)
+
+    # Ignore people/families who have requested it
+    dont_include = special_cases["ignore family"]
+    for person in people:
+        if person.formalname + " " + person.lastname in dont_include \
+                or person.firstname + " " + person.lastname in dont_include:
+            print(f"Excluding the family of {person} from directory")
+            families.pop(person.family_id)
+    people = [p for p in people if p.family_id in families.keys()]
+
+    # Change the info for people who have requested it
+    change = special_cases["change info"]
+    for info in ["email", "phone", "address"]:
+        for update in change[info]:
+            for person in people:
+                if person.is_named(update["name"]):
+                    setattr(person, info, update["new info"])
+                    break
+
+    # Change the listed members for certain families
+    for update in change["family"]:
+        family_to_change = None
+        for person in people:
+            if person.is_named(update["name"]):
+                family_to_change = person.family_id
+        if family_to_change:
+            for person in [p for p in people if p.family_id==family_to_change]:
+                person.family = update["new info"].split(", ")
 
     return people, families
