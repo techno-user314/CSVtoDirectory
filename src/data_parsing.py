@@ -118,6 +118,6 @@ def read_data(csv_path):
                 family_to_change = person.family_id
         if family_to_change:
             for person in [p for p in people if p.family_id==family_to_change]:
-                person.family = update["new info"]
+                person.family = update["new info"].split(", ")
 
     return people, families
