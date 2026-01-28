@@ -7,7 +7,12 @@ from photo_finder import get_photo_path
 from document_creation import add_photo_grid_page, add_preset_page, add_landscape_table
 from document_creation import LEFT_MARGIN, RIGHT_MARGIN, TOP_MARGIN, BOTTOM_MARGIN
 
-people, families = read_data("data.csv")
+DATA_FILE = "individuals_data.csv"
+COVER_IMAGES = ["Other/CoverPages-01.png","Other/CoverPages-02.png","Other/CoverPages-03.png",
+                "Other/CoverPages-04.png","Other/CoverPages-05.png"]
+FINAL_PAGE = "Other/Label_Page.png"
+
+people, families = read_data(DATA_FILE)
 
 # Sort people by family ID for faster search lookup
 people.sort(key=lambda p: p.family_id)
@@ -41,10 +46,8 @@ pages = 0
 doc = Document()
 
 # Add cover pages
-coverImages = ["Other/CoverPages-01.png","Other/CoverPages-02.png","Other/CoverPages-03.png",
-               "Other/CoverPages-04.png","Other/CoverPages-05.png"]
-for coverImage in coverImages:
-    add_preset_page(doc, coverImage)
+for cover_image in COVER_IMAGES:
+    add_preset_page(doc, cover_image)
     pages += 1
 
 # Add family photos
@@ -84,7 +87,7 @@ section.right_margin = Inches(RIGHT_MARGIN)
 section.top_margin = Inches(TOP_MARGIN)
 section.bottom_margin = Inches(BOTTOM_MARGIN)
 
-add_preset_page(doc, "Other/Label_Page.png")
+add_preset_page(doc, FINAL_PAGE)
 
 # Save
 doc.save("directory.docx")
