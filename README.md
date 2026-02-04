@@ -30,11 +30,16 @@ The images should be .jpg files named in one of the following formats:
 Where lastname is the family lastname, and firstname is the firstname of the primary member of the family (primary member as defined in the 'Family Relationship' field of the CSV; Every family must have a primary member, either labeled primary or husband in the CSV).  
 If the person is single, 'family' may be dropped from the filename, as shown above.
   
-If there is info on the spreadsheet that needs to be adjusted before being put into the directory, out can be done automatically in special_cases.json. See the example file.  
+If there is info on the spreadsheet that needs to be adjusted before being put into the directory, out can be done automatically in special_cases.json.  
+- To exclude a family, add the name of the primary member of the family in the "ignore family" list.
+- To change a person's information, add the name of the person and then new info under the desired secion in "change info".
+  For example, to change the family members listed for a person:
+  Under "change info"/"family", paste { "name":"John Doe", "new info","John, Mary, Alice, Bob"} to override whatever is in the CSV.
+  Notice that setting the "new info" field to "", will remove that person's info from the final directory.
   
 Run the program (which should take about a minute), and "directory.docx" should appear in the working directory of the program.  
   
-## Install and Run (Windows)
+## Install and Run
  1. [Install Python](https://www.python.org/downloads/).
  2. Download the zip file for the [latest release](https://github.com/techno-user314/csv-to-directory/releases).
  3. Unzip the folder.
