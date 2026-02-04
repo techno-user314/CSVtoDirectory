@@ -1,3 +1,8 @@
+DATA_FILE = "data.csv"
+COVER_IMAGES = ["Covers/page1.png","Covers/page2","Covers/page3.png",
+                "Covers/page4.png","Covers/page5.png"]
+FINAL_PAGE = "Covers/finalpage.png"
+
 import pandas as pd
 from docx import Document
 from docx.enum.section import WD_ORIENT
@@ -6,11 +11,6 @@ from data_parsing import read_data
 from photo_finder import get_photo_path
 from document_creation import add_photo_grid_page, add_preset_page, add_landscape_table
 from document_creation import LEFT_MARGIN, RIGHT_MARGIN, TOP_MARGIN, BOTTOM_MARGIN
-
-DATA_FILE = "individuals_data.csv"
-COVER_IMAGES = ["Other/CoverPages-01.png","Other/CoverPages-02.png","Other/CoverPages-03.png",
-                "Other/CoverPages-04.png","Other/CoverPages-05.png"]
-FINAL_PAGE = "Other/Label_Page.png"
 
 people, families = read_data(DATA_FILE)
 
