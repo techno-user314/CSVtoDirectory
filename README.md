@@ -41,7 +41,7 @@ Run the program (which should take about a minute), and "directory.docx" should 
  4. Open the folder in File Explorer, and navigate into the "src" directory.
  5. Put the family photos into the /Images folder.
  6. Optionally modify special_cases.json.
- 7. If you have cover photos, put these into the /Covers folder.
+ 7. If you have cover photos, put these into the /Covers folder, open main.py in a text editor, and modify the first three lines to specify the file paths.
  8. Paste your data CSV file into /src.
  9. Right click anywhere in the folder, and select "Open in Terminal".
  10. Run this command:
@@ -57,8 +57,9 @@ If you need to execute the program after having already completed the install:
  1. Open the program folder in File Explorer, and navigate into the "src" directory.
  2. Put your images into the /Images folder.
  3. Optionally modify special_cases.json
- 4. Paste your data CSV file into /src.
- 5. Navigate into the "virtenv" folder, into the "Scripts" folder, right click "Activate.ps1" and select "Copy as Path".
+ 4. If you have cover photos, put these into the /Covers folder, open main.py in a text editor, and modify the first three lines to specify the file paths.
+ 5. Paste your data CSV file into /src.
+ 6. Navigate into the "virtenv" folder, into the "Scripts" folder, right click "Activate.ps1" and select "Copy as Path".
  8. Go back to /src, right click anywhere in the folder, and select "Open in Terminal".
  9. Type `powershell -ExecutionPolicy Bypass -File ` (with a space at the end) and then paste the file path you just copied.  
     > If you are on Linux or MacOS, run `source virtenv/bin/activate`  instead.
