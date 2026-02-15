@@ -8,7 +8,7 @@ Copy the CSV file into the working directory of the program. It should have one 
 | --- | --- |
 | Family ID | Unique ID number for every family; Leave blank if person is single |
 | First Name | Formal first name of the person |
-| Preffered Name | Preffered first name of the person |
+| Preffered Name | Preferred first name of the person |
 | Last Name | Family's last name/surname |
 | Family Relationship | One of: Primary, Husband, Wife, Other |
 | Family Members | Comma separated list of the direct members of the family this person is in (including self) |
